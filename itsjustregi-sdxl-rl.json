@@ -1,0 +1,493 @@
+{
+  "2": {
+    "inputs": {
+      "render_output_path": "RenderImage.png",
+      "input_type": "image",
+      "output_type": "image",
+      "frame_rate": 12,
+      "positive_prompt": "",
+      "negative_prompt": "",
+      "steps": 28,
+      "cfg": 1,
+      "seed": 863601497487132,
+      "denoise": 0.88,
+      "select_model": "",
+      "audio_path": ""
+    },
+    "class_type": "core",
+    "_meta": {
+      "title": "RL AI Render UI Core"
+    }
+  },
+  "6": {
+    "inputs": {
+      "ckpt_name": [
+        "2",
+        8
+      ]
+    },
+    "class_type": "CheckpointLoaderSimple",
+    "_meta": {
+      "title": "Load Checkpoint"
+    }
+  },
+  "19": {
+    "inputs": {
+      "filename_prefix": "Result",
+      "images": [
+        "93",
+        0
+      ]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  },
+  "20": {
+    "inputs": {
+      "PowerLoraLoaderHeaderWidget": {
+        "type": "PowerLoraLoaderHeaderWidget"
+      },
+      "➕ Add Lora": "",
+      "model": [
+        "6",
+        0
+      ],
+      "clip": [
+        "6",
+        1
+      ]
+    },
+    "class_type": "Power Lora Loader (rgthree)",
+    "_meta": {
+      "title": "Power Lora Loader (rgthree)"
+    }
+  },
+  "21": {
+    "inputs": {
+      "prompt_g": "",
+      "prompt_l": [
+        "92",
+        0
+      ],
+      "insert_lora": "CHOOSE",
+      "insert_embedding": "CHOOSE",
+      "opt_model": [
+        "20",
+        0
+      ],
+      "opt_clip": [
+        "20",
+        1
+      ]
+    },
+    "class_type": "SDXL Power Prompt - Positive (rgthree)",
+    "_meta": {
+      "title": "SDXL Power Prompt - Positive (rgthree)"
+    }
+  },
+  "22": {
+    "inputs": {
+      "prompt_g": "",
+      "prompt_l": [
+        "92",
+        1
+      ],
+      "insert_embedding": "CHOOSE",
+      "opt_clip": [
+        "21",
+        2
+      ]
+    },
+    "class_type": "SDXL Power Prompt - Simple / Negative (rgthree)",
+    "_meta": {
+      "title": "SDXL Power Prompt - Simple / Negative (rgthree)"
+    }
+  },
+  "24": {
+    "inputs": {
+      "image": [
+        "2",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Resource"
+    }
+  },
+  "25": {
+    "inputs": {
+      "pixels": [
+        "24",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ]
+    },
+    "class_type": "VAEEncode",
+    "_meta": {
+      "title": "VAE Encode"
+    }
+  },
+  "26": {
+    "inputs": {
+      "control_net_type": "open_pose",
+      "control_net_path": "RenderImageOpenPose.png",
+      "control_net_state": true,
+      "control_net_strength": 1,
+      "control_net_start_percent": 0,
+      "control_net_end_percent": 1
+    },
+    "class_type": "control_net",
+    "_meta": {
+      "title": "RL Set ControlNet"
+    }
+  },
+  "27": {
+    "inputs": {
+      "control_net_type": "depth",
+      "control_net_path": "RenderImageDepth.png",
+      "control_net_state": true,
+      "control_net_strength": 0.5,
+      "control_net_start_percent": 0,
+      "control_net_end_percent": 0.6000000000000001
+    },
+    "class_type": "control_net",
+    "_meta": {
+      "title": "RL Set ControlNet"
+    }
+  },
+  "28": {
+    "inputs": {
+      "control_net_type": "canny",
+      "control_net_path": "RenderImageCanny.png",
+      "control_net_state": false,
+      "control_net_strength": 0.5,
+      "control_net_start_percent": 0,
+      "control_net_end_percent": 0.5
+    },
+    "class_type": "control_net",
+    "_meta": {
+      "title": "RL Set ControlNet"
+    }
+  },
+  "29": {
+    "inputs": {
+      "image": [
+        "26",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Pose"
+    }
+  },
+  "30": {
+    "inputs": {
+      "type": "openpose",
+      "control_net": [
+        "55",
+        0
+      ]
+    },
+    "class_type": "SetUnionControlNetType",
+    "_meta": {
+      "title": "SetUnionControlNetType"
+    }
+  },
+  "31": {
+    "inputs": {
+      "image": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Depth"
+    }
+  },
+  "32": {
+    "inputs": {
+      "type": "depth",
+      "control_net": [
+        "39",
+        0
+      ]
+    },
+    "class_type": "SetUnionControlNetType",
+    "_meta": {
+      "title": "SetUnionControlNetType"
+    }
+  },
+  "33": {
+    "inputs": {
+      "image": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Canny"
+    }
+  },
+  "34": {
+    "inputs": {
+      "type": "canny/lineart/anime_lineart/mlsd",
+      "control_net": [
+        "39",
+        0
+      ]
+    },
+    "class_type": "SetUnionControlNetType",
+    "_meta": {
+      "title": "SetUnionControlNetType"
+    }
+  },
+  "35": {
+    "inputs": {
+      "strength": [
+        "28",
+        2
+      ],
+      "start_percent": [
+        "28",
+        3
+      ],
+      "end_percent": [
+        "28",
+        4
+      ],
+      "positive": [
+        "36",
+        0
+      ],
+      "negative": [
+        "36",
+        1
+      ],
+      "control_net": [
+        "34",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    },
+    "class_type": "ControlNetApplySD3",
+    "_meta": {
+      "title": "Apply Controlnet with VAE (Canny)"
+    }
+  },
+  "36": {
+    "inputs": {
+      "strength": [
+        "27",
+        2
+      ],
+      "start_percent": [
+        "27",
+        3
+      ],
+      "end_percent": [
+        "27",
+        4
+      ],
+      "positive": [
+        "37",
+        0
+      ],
+      "negative": [
+        "37",
+        1
+      ],
+      "control_net": [
+        "32",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    },
+    "class_type": "ControlNetApplySD3",
+    "_meta": {
+      "title": "Apply Controlnet with VAE (Depth)"
+    }
+  },
+  "37": {
+    "inputs": {
+      "strength": [
+        "26",
+        2
+      ],
+      "start_percent": [
+        "26",
+        3
+      ],
+      "end_percent": [
+        "26",
+        4
+      ],
+      "positive": [
+        "21",
+        0
+      ],
+      "negative": [
+        "22",
+        0
+      ],
+      "control_net": [
+        "30",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ],
+      "image": [
+        "29",
+        0
+      ]
+    },
+    "class_type": "ControlNetApplySD3",
+    "_meta": {
+      "title": "Apply Controlnet with VAE (Pose)"
+    }
+  },
+  "39": {
+    "inputs": {
+      "control_net_name": "SDXL 1.0/controlnet-union-sdxl.safetensors"
+    },
+    "class_type": "ControlNetLoader",
+    "_meta": {
+      "title": "Load ControlNet Model"
+    }
+  },
+  "52": {
+    "inputs": {
+      "images": [
+        "93",
+        0
+      ]
+    },
+    "class_type": "PreviewImage",
+    "_meta": {
+      "title": "Preview Image"
+    }
+  },
+  "55": {
+    "inputs": {
+      "control_net_name": "SDXL/OpenPoseXL2.safetensors"
+    },
+    "class_type": "ControlNetLoader",
+    "_meta": {
+      "title": "Load ControlNet Model"
+    }
+  },
+  "77": {
+    "inputs": {
+      "text": [
+        "2",
+        2
+      ]
+    },
+    "class_type": "ShowText|pysssss",
+    "_meta": {
+      "title": "Show Text 🐍"
+    }
+  },
+  "92": {
+    "inputs": {
+      "text_positive": [
+        "2",
+        2
+      ],
+      "text_negative": [
+        "2",
+        3
+      ],
+      "style": "sai-cinematic",
+      "log_prompt": true,
+      "style_positive": true,
+      "style_negative": true
+    },
+    "class_type": "SDXLPromptStyler",
+    "_meta": {
+      "title": "SDXL Prompt Styler"
+    }
+  },
+  "93": {
+    "inputs": {
+      "samples": [
+        "98",
+        0
+      ],
+      "vae": [
+        "6",
+        2
+      ]
+    },
+    "class_type": "VAEDecode",
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "98": {
+    "inputs": {
+      "seed": [
+        "2",
+        6
+      ],
+      "steps": [
+        "2",
+        4
+      ],
+      "cfg": [
+        "2",
+        5
+      ],
+      "sampler_name": "dpmpp_2m_sde",
+      "scheduler": "karras",
+      "denoise": [
+        "2",
+        7
+      ],
+      "model": [
+        "21",
+        1
+      ],
+      "positive": [
+        "35",
+        0
+      ],
+      "negative": [
+        "35",
+        1
+      ],
+      "latent_image": [
+        "25",
+        0
+      ]
+    },
+    "class_type": "KSampler",
+    "_meta": {
+      "title": "KSampler"
+    }
+  }
+}
