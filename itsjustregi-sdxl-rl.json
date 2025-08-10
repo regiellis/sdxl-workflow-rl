@@ -9,7 +9,7 @@
       "negative_prompt": "",
       "steps": 28,
       "cfg": 1,
-      "seed": 863601497487132,
+      "seed": 585146570695717,
       "denoise": 0.88,
       "select_model": "",
       "audio_path": ""
@@ -21,10 +21,7 @@
   },
   "6": {
     "inputs": {
-      "ckpt_name": [
-        "2",
-        8
-      ]
+      "ckpt_name": "SDXL 1.0/epicrealismXL_vx1Finalkiss.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
@@ -74,7 +71,7 @@
       "insert_lora": "CHOOSE",
       "insert_embedding": "CHOOSE",
       "opt_model": [
-        "20",
+        "103",
         0
       ],
       "opt_clip": [
@@ -488,6 +485,73 @@
     "class_type": "KSampler",
     "_meta": {
       "title": "KSampler"
+    }
+  },
+  "100": {
+    "inputs": {
+      "name": "Style Transfer (IP-Adapter)",
+      "image_path": "",
+      "weight_type": "ease in",
+      "weight": 1,
+      "active": true
+    },
+    "class_type": "additional_image",
+    "_meta": {
+      "title": "RL Set Reference Image"
+    }
+  },
+  "101": {
+    "inputs": {
+      "image": [
+        "100",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Resource"
+    }
+  },
+  "102": {
+    "inputs": {
+      "preset": "PLUS (high strength)",
+      "model": [
+        "6",
+        0
+      ]
+    },
+    "class_type": "IPAdapterUnifiedLoader",
+    "_meta": {
+      "title": "IPAdapter Unified Loader"
+    }
+  },
+  "103": {
+    "inputs": {
+      "weight": [
+        "100",
+        2
+      ],
+      "weight_type": "style transfer precise",
+      "combine_embeds": "concat",
+      "start_at": 0,
+      "end_at": 1,
+      "embeds_scaling": "K+V",
+      "model": [
+        "102",
+        0
+      ],
+      "ipadapter": [
+        "102",
+        1
+      ],
+      "image": [
+        "101",
+        0
+      ]
+    },
+    "class_type": "IPAdapterAdvanced",
+    "_meta": {
+      "title": "IPAdapter Advanced"
     }
   }
 }

@@ -7,6 +7,18 @@ Core ComfyUI nodes and Reallusion-specific nodes have been excluded from the mod
 
 ![alt text](Result0.png)
 
+---
+
+## Workflow JSON Files
+
+Two workflow definitions are included so you can choose the right one for the task:
+
+| File | Purpose | Use Case |
+| ---- | ------- | -------- |
+| `itsjustregi-sdxl-rl.json` | Plug into RL Render | Creating new Style Preset |
+| `itsjustregi-sdxl-rl-edit.json` | Full editor graph with layout metadata (`nodes` array, positions, links) | Open and visually edit inside the ComfyUI UI |
+
+
 ## Required Models
 
 ### 1. Base Model
@@ -42,6 +54,8 @@ Installation Tip:
 All the nodes and models except the Reallusion (RL) nodes can be installed via the ComfyUI Manager using the Install Missing Nodes function (recommended).
 The RL nodes are available here: [ComfyUI-Reallusion](https://github.com/reallusion/ComfyUI-Reallusion).
 
+IP-Adapter Plus is now required for style transfer functionality (reference / style image conditioning).
+
 Official RL Resources:
 
 * [Consistent Characters & Precise Control for AI Films and Commercial Production](https://discussions.reallusion.com/t/official-consistent-characters-and-precise-control-for-ai-films-and-commercial-production/14440)
@@ -51,7 +65,8 @@ Official RL Resources:
 | -------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------- |
 | rgthree-comfy              | [rgthree-comfy](https://github.com/rgthree/rgthree-comfy)                          | Power Lora Loader & Power Prompt nodes            |
 | SDXL Prompt Styler         | [ComfyUI Instant Styler](https://github.com/cubiq/ComfyUI_InstantStyler) (or maintained variant) | Applies consistent styling presets to prompts     |
-| ControlNetApplySD3         | Included with ControlNet extension                                                  | Applies VAE and prompt-controlled conditioning    |
+| ComfyUI IPAdapter Plus     | [ComfyUI_IPAdapter_plus](https://github.com/cubiq/ComfyUI_IPAdapter_plus)          | Style / reference image (IP-Adapter) integration  |
+| ControlNetApply            | Included with ControlNet extension                                                  | Applies VAE and prompt-controlled conditioning    |
 | SetUnionControlNetType     | Part of ControlNet Union support                                                    | Assigns control types for union model processing  |
 
 ---
@@ -110,6 +125,57 @@ You will need external tools or ComfyUI preprocessors to generate these images b
 
 ---
 
+## Style Transfer (IP-Adapter) Module
+
+
+| Node (Edit Graph) | Class | Role |
+| ----------------- | ----- | ---- |
+| `additional_image` | `additional_image` | Defines the style/reference image path and base weight curve |
+| `IPAdapterUnifiedLoader` | `IPAdapterUnifiedLoader` | Loads the IP-Adapter variant (e.g. PLUS high strength) alongside the current model |
+| `IPAdapterAdvanced`  | `IPAdapterAdvanced` | Applies style embedding(s) with weight, scaling mode (K+V), and timing (start/end) |
+
+Important parameters (from minimal JSON):
+
+| Field | Where | Description |
+| ----- | ----- | ----------- |
+| `image_path` | additional_image | Path to your style reference image (set before submission) |
+| `weight` | additional_image / IPAdapterAdvanced | Overall influence (typical range 0.5–1.2) |
+| `weight_type` | additional_image | Curve shaping; `ease in` ramps up influence after initial denoise |
+| `weight_type` | IPAdapterAdvanced | `style transfer precise` biases toward stylistic fidelity |
+| `start_at` / `end_at` | IPAdapterAdvanced | Fraction of diffusion steps to apply style (0–1) |
+| `embeds_scaling` | IPAdapterAdvanced | `K+V` scales both key/value attention for stronger style adaptation |
+
+Disable style transfer quickly by setting the `active` flag (if present) to `false` or setting `weight` to `0` before submission.
+
+
+
+### Reference Image Preparation
+
+Use a clean, well-lit image that strongly represents the target style (or subject) at 512–1024px on the short side. Avoid heavy compression; PNG or high-quality JPEG recommended.
+
+### Example Outputs
+
+Baseline (no style) vs style transfer result:
+
+| Style Reference | Stylized Result |
+| --------------- | --------------- |
+| ![reference](additional_001.jpg) | ![styled](ResultStyle.png) |
+
+If the style is overpowering facial consistency, lower `weight` or narrow `start_at`/`end_at` (e.g. `start_at: 0.15`, `end_at: 0.85`).
+
+### Tuning Tips
+
+| Goal | Adjustment |
+| ---- | ---------- |
+| More subject fidelity | Decrease style `weight` or reduce `end_at` to < 0.9 |
+| More style impact | Increase `weight` (max ~1.3) or use earlier `start_at` (0) |
+| Reduce color shift | Try different IP-Adapter preset (STANDARD) or lower `weight` |
+| Sharper detail | Slightly raise CFG or steps (e.g. 32) after stabilizing style |
+
+For batch experimentation you can script multiple submissions changing only `weight` and `image_path`.
+
+---
+
 ## Suggested Folder Structure (Example)
 
 ComfyUI/
@@ -133,6 +199,9 @@ ComfyUI/
 * Model not found: Confirm the filename and that it resides in the correct models subfolder.
 * Control not applying: Lower or raise the strength parameter; verify the correct control type mapping for union.
 * Performance issues: See Reallusion performance guidance (link above) and ensure GPU VRAM isn’t saturated by excessive LoRAs.
+* Style not applying: Confirm IP-Adapter nodes are present and `image_path` resolves. Verify the IP-Adapter model weights are installed (some presets require additional model files).
+* Style too strong: Lower `weight` or set `weight_type` to a gentler curve (`linear`).
+* API submission fails: Make sure you wrapped the graph as `{ "prompt": { ... } }` and escaped backslashes on Windows paths.
 
 ---
 
