@@ -209,6 +209,3 @@ ComfyUI/
 
 This repository includes an MIT License (see LICENSE file). Models and external node repos may have their own licenses; review them before commercial use.
 
----
-
-If you need this README adjusted (e.g., add Windows-specific batch scripts, pin exact repo commit hashes, or include a generated diagram), let me know.
