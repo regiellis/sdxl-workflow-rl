@@ -9,7 +9,7 @@
       "negative_prompt": "",
       "steps": 28,
       "cfg": 1,
-      "seed": 585146570695717,
+      "seed": 689852780016306,
       "denoise": 0.88,
       "select_model": "",
       "audio_path": ""
@@ -21,7 +21,10 @@
   },
   "6": {
     "inputs": {
-      "ckpt_name": "SDXL 1.0/epicrealismXL_vx1Finalkiss.safetensors"
+      "ckpt_name": [
+        "2",
+        8
+      ]
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
@@ -491,7 +494,7 @@
     "inputs": {
       "name": "Style Transfer (IP-Adapter)",
       "image_path": "",
-      "weight_type": "ease in",
+      "weight_type": "linear",
       "weight": 1,
       "active": true
     },
@@ -531,11 +534,14 @@
         "100",
         2
       ],
-      "weight_type": "style transfer precise",
+      "weight_type": [
+        "100",
+        1
+      ],
       "combine_embeds": "concat",
       "start_at": 0,
       "end_at": 1,
-      "embeds_scaling": "K+V",
+      "embeds_scaling": "V only",
       "model": [
         "102",
         0
@@ -547,11 +553,53 @@
       "image": [
         "101",
         0
+      ],
+      "attn_mask": [
+        "110",
+        0
       ]
     },
     "class_type": "IPAdapterAdvanced",
     "_meta": {
       "title": "IPAdapter Advanced"
+    }
+  },
+  "108": {
+    "inputs": {
+      "name": "Style Transfer Mask",
+      "image_path": "",
+      "weight_type": "linear",
+      "weight": 1,
+      "active": true
+    },
+    "class_type": "additional_image",
+    "_meta": {
+      "title": "RL Set Reference Image"
+    }
+  },
+  "109": {
+    "inputs": {
+      "image": [
+        "108",
+        0
+      ]
+    },
+    "class_type": "LoadImageFromPath",
+    "_meta": {
+      "title": "Resource"
+    }
+  },
+  "110": {
+    "inputs": {
+      "channel": "red",
+      "image": [
+        "109",
+        0
+      ]
+    },
+    "class_type": "ImageToMask",
+    "_meta": {
+      "title": "Convert Image to Mask"
     }
   }
 }
